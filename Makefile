@@ -31,8 +31,8 @@ secrets/jupyterhub.key:
 	@echo "Need an SSL key in secrets/jupyterhub.key"
 	@exit 1
 
-userlist:
-	@echo "Add usernames, one per line, to ./userlist, such as:"
+secrets/userlist:
+	@echo "Add usernames, one per line, to secrets/userlist, such as:"
 	@echo "    zoe admin"
 	@echo "    wash"
 	@exit 1
@@ -45,7 +45,7 @@ else
 	cert_files=
 endif
 
-check-files: userlist $(cert_files) secrets/oauth.env secrets/postgres.env
+check-files: secrets/userlist $(cert_files) secrets/oauth.env secrets/postgres.env
 
 pull:
 	docker pull $(DOCKER_NOTEBOOK_IMAGE)
@@ -58,5 +58,13 @@ notebook_image: pull singleuser/Dockerfile
 
 build: check-files network volumes
 	docker-compose build
+
+up:
+	#docker-compose -f examples/letsencrypt/docker-compose.yml up -d
+	docker-compose up -d
+
+down:
+	#docker-compose -f examples/letsencrypt/docker-compose.yml down
+	docker-compose down
 
 .PHONY: network volumes check-files pull notebook_image build
