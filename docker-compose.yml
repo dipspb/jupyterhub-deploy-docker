@@ -36,6 +36,8 @@ services:
       - "data:${DATA_VOLUME_CONTAINER}"
       # Bind user list file
       - "${PWD}/secrets/userlist:/srv/jupyterhub/userlist"
+      # Custom DockerHub config to be mounted on start instead of copied at build stage
+      - "${PWD}/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py"
       # LetsEncrypt certificate
       - "secrets:/etc/letsencrypt"
     ports:
@@ -57,6 +59,8 @@ services:
       # LetsEncrypt certificate
       SSL_KEY: "/etc/letsencrypt/privkey.pem"
       SSL_CERT: "/etc/letsencrypt/cert.pem"
+      # Home directory for shared notebook subdirs
+      DOCKER_SHARED_HOME_DIR: "${PWD}/shared"
     env_file:
       - secrets/postgres.env
       - secrets/oauth.env

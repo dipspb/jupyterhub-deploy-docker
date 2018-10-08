@@ -35,7 +35,12 @@ notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
 # Mount the real user's Docker volume on the host to the notebook user's
 # notebook directory in the container
-c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
+#c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
+shared_notebook_dir = os.environ['DOCKER_SHARED_HOME_DIR'] + '/{username}'
+c.DockerSpawner.volumes = {
+    'jupyterhub-user-{username}': notebook_dir,
+    shared_notebook_dir: '/home/jovyan/shared'
+}
 # volume_driver is no longer a keyword argument to create_container()
 # c.DockerSpawner.extra_create_kwargs.update({ 'volume_driver': 'local' })
 # Remove containers once they are stopped
